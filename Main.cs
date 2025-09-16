@@ -2,7 +2,8 @@
 {
     static void Main(string[] args)
     {
-        var app = new Menu();
+        Dictionary<string, string> users_direct = new Dictionary<string, string>();
+        var app = new Register(users_direct);
         app.Run();
     }
 }
