@@ -1,9 +1,10 @@
-﻿public class Register(Dictionary<string, string> users_direct)
+﻿public class Register(Dictionary<string, List<object>> users_direct)
 {
     private User currentUser;
 
     public void Run()
     {
+        Console.Clear();
         Console.WriteLine("Добро пожаловать в наш магазин!");
         Console.WriteLine("1: Зарегистрироваться");
         Console.WriteLine("2: Вход в аккаунт");
@@ -11,7 +12,7 @@
 
         int option;
         while (!int.TryParse(Console.ReadLine(), out option) || (option != 1 && option != 2))
-        {   
+        {
             Console.WriteLine("Пожалуйста, введите число(1 или 2)!");
             continue;
         }
@@ -45,15 +46,16 @@
         }
 
         Console.Write("Введите пароль: ");
-        var password = Console.ReadLine();
-
-        users_direct[username] = password;
-
+        var password = Console.ReadLine().Trim();
         currentUser = new User
         {
             Name = username,
             Password = password
         };
+        users_direct[username] = new List<object> {password, currentUser};
+
+
+
 
         Console.WriteLine("Регистрация успешна!");
         ShowSuccessMessage(currentUser, users_direct);
@@ -67,16 +69,22 @@
         if (users_direct.ContainsKey(login_user))
         {
             Console.WriteLine("Введите пароль: ");
-            string Login_password = Console.ReadLine();
-            if (Login_password == users_direct[login_user])
+            string Login_password = Console.ReadLine();            
+            if (Login_password.Trim() == (string)users_direct[login_user][0])
             {
                 var menu = new Menu();
-                menu.Run_Menu(currentUser, users_direct);
+                menu.Run_Menu((User)users_direct[login_user][1], users_direct);
+            }
+            else
+            {
+                Console.WriteLine(users_direct[login_user][0] == Login_password);
+                Console.WriteLine(Login_password);
+                string Login_password_2 = Console.ReadLine();
             }
         }
     }
 
-    public void ShowSuccessMessage(User currentUser, Dictionary<string, string> users_direct)
+    public void ShowSuccessMessage(User currentUser, Dictionary<string, List<object>> users_direct)
     {
         var menu = new Menu();
         menu.Run_Menu(currentUser, users_direct);

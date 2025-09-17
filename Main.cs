@@ -2,7 +2,7 @@
 {
     static void Main(string[] args)
     {
-        Dictionary<string, string> users_direct = new Dictionary<string, string>();
+        Dictionary<string, List<object>> users_direct = new Dictionary<string, List<object>>();
         var app = new Register(users_direct);
         app.Run();
     }

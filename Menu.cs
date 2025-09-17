@@ -1,6 +1,6 @@
 ﻿public class Menu
 {
-    public void Run_Menu(User username, Dictionary<string, string> users_direct)
+    public void Run_Menu(User username, Dictionary<string, List<object>> users_direct)
     {
         Console.Clear();
         Console.WriteLine($"Пользователь: {username.Name}");
@@ -32,7 +32,7 @@
 
         }
     }
-    private void Show_user_product(User user, Dictionary<string, string> users_direct)
+    private void Show_user_product(User user, Dictionary<string, List<object>> users_direct)
     {
         if (user.Products.Count == 0)
         {

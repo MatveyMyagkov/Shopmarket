@@ -1,8 +1,4 @@
-﻿public class List_User()
-{
-    public Dictionary<string, string> users_direct = new Dictionary<string, string>();
-}
-public class Product
+﻿public class Product
 {
     public string Name { get; set; }
     public string Short_Description { get; set; }
