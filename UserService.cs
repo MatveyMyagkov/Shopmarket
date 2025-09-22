@@ -59,9 +59,26 @@
         }
         else
         {
-            Console.WriteLine("Неверно введен имя пользователя или пароль");
-            var app = new UserService();
-            StartMenu.Show(app);
+            Console.WriteLine("Неверно введен пароль или имя пользователя");
+            Console.WriteLine("Введите 1 если хотите вернуться в меню или 2 если хотите попробовать снова войти");
+            int option;
+            while (!int.TryParse(Console.ReadLine(), out option) || (option != 1 && option != 2))
+            {
+                Console.WriteLine("Пожалуйста, введите число(1 или 2)!");
+                continue;
+            }
+            switch (option)
+            {
+                case 1:
+                    var backMenu = new UserService();
+                    StartMenu.Show(backMenu);
+                    break;
+                case 2:
+                    var backLogin = new UserService();
+                    backLogin.Login();
+                    break;
+            }
+
 
         }
     }
