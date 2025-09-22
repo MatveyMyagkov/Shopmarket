@@ -1,6 +1,6 @@
-﻿public class Menu
+﻿public class MainMenu
 {
-    public void Run_Menu(User username, Dictionary<string, List<object>> users_direct)
+    public void Show(User username)
     {
         Console.Clear();
         Console.WriteLine($"Пользователь: {username.Name}");
@@ -20,26 +20,26 @@
             case 1:
                 Console.Clear();
                 Console.WriteLine("Ваши товары");
-                Show_user_product(username, users_direct);
+                Show_user_product(username);
                 break;
             case 2:
                 Console.WriteLine("Давай авторизуемся");
                 break;
             case 3:
-                var app = new Register(users_direct);
-                app.Run();
+                var app = new UserService();
+                StartMenu.Show(app);
                 break;
 
         }
     }
-    private void Show_user_product(User user, Dictionary<string, List<object>> users_direct)
+    private void Show_user_product(User user)
     {
         if (user.Products.Count == 0)
         {
             Console.WriteLine("У вас пока нет товаров");
             Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
             Console.ReadLine();
-            Run_Menu(user, users_direct);
+            Show(user);
             return;
         }
     }
