@@ -23,7 +23,8 @@
                 Show_user_product(username);
                 break;
             case 2:
-                Console.WriteLine("Давай авторизуемся");
+                Console.WriteLine("Давайте добавим товары");
+                AddProduct(username);
                 break;
             case 3:
                 var app = new UserService();
@@ -42,6 +43,30 @@
             Show(user);
             return;
         }
+        else
+        {
+            Console.WriteLine(user.Products[0].Name);
+        }
+    }
+    private void AddProduct(User user)
+    {
+        Console.Clear();
+        Console.WriteLine("Введите название товара");
+        var nameProduct = Console.ReadLine();
+        Console.WriteLine("Напишите короткое описание к вашему товару");
+        var shortDescription = Console.ReadLine();
+        Console.WriteLine("Напишите полное описание к вашему товару");
+        var description = Console.ReadLine();
+        Console.WriteLine("Введите цену вашего товара в $");
+        decimal price = decimal.Parse(Console.ReadLine());
+        var product = new Product(nameProduct, shortDescription, description, price);
+        user.Products.Add(product);
+        Console.WriteLine("Товар усспешно добавлен!");
+        Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
+        Console.ReadLine();
+        Show(user);
+        return;
+
     }
 
     
