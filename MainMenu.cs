@@ -38,15 +38,53 @@
         if (user.Products.Count == 0)
         {
             Console.WriteLine("У вас пока нет товаров");
-            Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
-            Console.ReadLine();
-            Show(user);
-            return;
         }
         else
         {
-            Console.WriteLine(user.Products[0].Name);
+            int currentNumber = 1;
+            foreach (Product currentProduct in user.Products)
+            {
+                Console.WriteLine($"Товар {currentNumber}: {currentProduct.Name}");
+                Console.WriteLine($"Краткое описание товара: {currentProduct.ShortDescription}");
+                Console.WriteLine($"Цена: {currentProduct.Price}\n");
+                currentNumber++;
+            }
+
+
+
+            Console.WriteLine("Что вы хотите сделать с товароми\n 1 - Узнать про них больше информации\n 0 - Выйти из товаров");
+            int options;
+            while (!int.TryParse(Console.ReadLine(), out options) || (options != 1 && options != 0))
+            {
+                Console.WriteLine("Пожалуйста, введите число 0 или 1");
+                continue;
+            }
+            switch (options)
+            {
+                case 0:
+                    Show(user);
+                    break;
+                case 1:
+                    Console.WriteLine("Какой товар вы бы хотели просмотреть полностью? (Введите номер товара)");
+                    int number;
+                    while (true){
+                        if (int.TryParse(Console.ReadLine(), out number) && number > 0 && number <= user.Products.Count)
+                        {
+                            break;
+                        }
+                        Console.WriteLine("Введите номер существующего товара");
+                            
+                    }
+                    ShowFullProduct(user, number);
+                    break;
+
+
+            }
         }
+        Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
+        Console.ReadLine();
+        Show(user);
+        return;
     }
     private void AddProduct(User user)
     {
@@ -68,6 +106,18 @@
         return;
 
     }
+    private void ShowFullProduct(User user, int number)
+    {
+        Console.Clear();
+        Console.WriteLine($"Товар {number}: {user.Products[number - 1].Name}");
+        Console.WriteLine($"Краткое описание товара: {user.Products[number - 1].ShortDescription}");
+        Console.WriteLine($"Полное описание товара: {user.Products[number - 1].Description}");
+        Console.WriteLine($"Цена: {user.Products[number - 1].Price}\n");
+        Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
+        Console.ReadLine();
+        Show(user);
+        return;
+    }
 
-    
+
 }
