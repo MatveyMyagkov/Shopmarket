@@ -15,21 +15,21 @@
             Console.WriteLine("Пожалуйста, введите число(1 или 2 или 3 или 4)!");
             continue;
         }
-        var productMenu = new ProductMenu();
+        var productService = new ProductMenu();
         switch (option_in_menu)
         {
             case 1:
                 Console.Clear();
                 Console.WriteLine("Каталог товаров");
-                productMenu.ShowCatalog(username);
+                productService.ShowCatalog(username);
                 break;
             case 2:
                 Console.WriteLine("Давайте добавим товары");
-                productMenu.AddProduct(username);
+                productService.AddProduct(username);
                 break;
             case 3:
                 Console.WriteLine("Избранное");
-                productMenu.ShowSelected(username);
+                productService.ShowSelected(username);
                 break;
             case 4:
                 var app = new UserService();
