@@ -31,6 +31,7 @@
             Console.WriteLine("Введите повторно пароль: ");
             passwordConfirm = Console.ReadLine();
         }
+
         _currentUser = new User
         {
             Name = username,
@@ -38,6 +39,7 @@
         };
         _users.Add(_currentUser);
         Console.WriteLine("Регистрация успешна!");
+
         ShowSuccessMessage(_currentUser);
     }
 

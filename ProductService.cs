@@ -1,7 +1,9 @@
 ﻿public class ProductService
 {
     private static List<Product> _products = new List<Product>();
+    private static List<Product> _order = new List<Product>();
 
+    public IReadOnlyCollection<Product> Order => _order;
     public IReadOnlyCollection<Product> Products => _products;
 
     public void AddProduct(User user)
@@ -34,16 +36,38 @@
         MainMenu.Show(user);
     }
 
+    public void AddOrder(User user)
+    {
+
+        Console.WriteLine("Введите ID товара, который вы бы хотели добавить в корзины");
+        int options;
+        while (!int.TryParse(Console.ReadLine(), out options))
+        {
+            Console.WriteLine("Введите ID товара");
+        }
+
+        var productRemove = user.Products.FirstOrDefault(p => p.Id == options);
+        if (productRemove != null)
+        {
+            user.Order.Add(productRemove);
+            Console.WriteLine("Товар успешно добавлен в корзину");
+        }
+        else
+        {
+            Console.WriteLine("Товар с указанным ID не найден в избранном");
+        }
+    }
+
     public void ShowSelected(User user)
     {
         Console.Clear();
         if (user.Products.Count == 0)
         {
-            Console.WriteLine("Ваша корзина пуста");
+            Console.WriteLine("У вас нет понравившихся товаров");
         }
         else
         {
-            Console.WriteLine("Ваша корзина");
+            Console.WriteLine("Понравившиеся товары");
             foreach (var product in user.Products)
             {
                 Console.WriteLine($"Товар ID({product.Id}): {product.Name}");
@@ -54,19 +78,23 @@
 
             Console.WriteLine("0 - Вернуться на главную");
             Console.WriteLine("1 - Удалить товар по ID");
+            Console.WriteLine("2 - Добавить товар в корзину по ID");
             int options;
-            while (!int.TryParse(Console.ReadLine(),out options) || (options != 0 && options != 1))
+            while (!int.TryParse(Console.ReadLine(), out options) || options < 0 || options > 2)
             {
-                Console.WriteLine("Введите число 0 или 1");
+                Console.WriteLine("Введите число от 0 до 2");
             }
             switch (options)
             {
                 case 0:
                     MainMenu.Show(user);
                     break;
-                    
+
                 case 1:
                     DeleteProductCatalog(user);
+                    break;
+                case 2:
+                    AddOrder(user);
                     break;
             }
         }
@@ -87,10 +115,11 @@
         Console.WriteLine("Хотите добавить в избранное этот товар?");
         Console.WriteLine("0 - Вернуться на главную");
         Console.WriteLine("1 - Добавить в избранное");
+        Console.WriteLine("2 - Добавить в корзину");
         int option;
-        while (!int.TryParse(Console.ReadLine(), out option) || (option != 0 && option != 1))
+        while (!int.TryParse(Console.ReadLine(), out option) || option < 0 || option > 2)
         {
-            Console.WriteLine("Введите число 0 или 1!");
+            Console.WriteLine("Введите число от 0 до 2!");
         }
 
         switch (option)
@@ -101,16 +130,38 @@
             case 1:
                 user.Products.Add(_products[number - 1]);
                 Console.WriteLine("Товар успешно добавлен!");
-                Thread.Sleep(1000);
+                break;
+            case 2:
+                user.Order.Add(_products[number - 1]);
+                Console.WriteLine("Товар успешно добавлен!");
                 break;
         }
 
         MainMenu.Show(user);
     }
-
-    private void DeleteProductCatalog(User user)
+    private void DeleteProductOrder(User user)
     {
         Console.WriteLine("Введите ID товара, который вы бы хотели удалить из корзины");
+        int options;
+        while (!int.TryParse(Console.ReadLine(), out options))
+        {
+            Console.WriteLine("Введите ID товара");
+        }
+
+        var productRemove = user.Order.FirstOrDefault(p => p.Id == options);
+        if (productRemove != null)
+        {
+            user.Order.Remove(productRemove);
+            Console.WriteLine("Товар успешно удален из корзины");
+        }
+        else
+        {
+            Console.WriteLine("Товар с указанным ID не найден в корзине");
+        }
+    }
+    private void DeleteProductCatalog(User user)
+    {
+        Console.WriteLine("Введите ID товара, который вы бы хотели удалить из понравившихся");
         int options;
         while (!int.TryParse(Console.ReadLine(), out options))
         {
@@ -121,11 +172,11 @@
         if (productRemove != null)
         {
             user.Products.Remove(productRemove);
-            Console.WriteLine("Товар успешно удален из корзины");
+            Console.WriteLine("Товар успешно удален из избранного");
         }
         else
         {
-            Console.WriteLine("Товар с указанным ID не найден в корзине");
+            Console.WriteLine("Товар с указанным ID не найден в избранном");
         }
     }
     public void DeleteProduct(int id)
@@ -197,4 +248,47 @@
                 break;
         }
     }
+
+    public void ShowOrder(User user)
+    {
+        Console.Clear();
+        if (user.Order.Count == 0)
+        {
+            Console.WriteLine("У вас нет товаров в корзине");
+        }
+        else
+        {
+            Console.WriteLine("Понравившиеся товары");
+            foreach (var product in user.Order)
+            {
+                Console.WriteLine($"Товар ID({product.Id}): {product.Name}");
+                Console.WriteLine($"Краткое описание товара: {product.ShortDescription}");
+                Console.WriteLine($"Полное описание товара: {product.Description}");
+                Console.WriteLine($"Цена: {product.Price}");
+            }
+
+            Console.WriteLine("0 - Вернуться на главную");
+            Console.WriteLine("1 - Удалить товар из корзины");
+            int options;
+            while (!int.TryParse(Console.ReadLine(), out options) || options < 0 || options > 1)
+            {
+                Console.WriteLine("Введите число 0 или 1");
+            }
+            switch (options)
+            {
+                case 0:
+                    MainMenu.Show(user);
+                    break;
+
+                case 1:
+                    DeleteProductOrder(user);
+                    break;
+            }
+        }
+        Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
+        Console.ReadLine();
+
+        MainMenu.Show(user);
+    }
+
 }

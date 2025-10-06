@@ -7,12 +7,13 @@
         Console.WriteLine("1: Просмотреть товары");
         Console.WriteLine("2: Добавить товар в общий каталог");
         Console.WriteLine("3: Посмотреть понравившиеся товары");
-        Console.WriteLine("4: Выйти из аккаунта");
+        Console.WriteLine("4: Посмотреть корзину");
+        Console.WriteLine("5: Выйти из аккаунта");
 
         int option_in_menu;
-        while (!int.TryParse(Console.ReadLine(), out option_in_menu) || (option_in_menu != 1 && option_in_menu != 2 && option_in_menu != 3 && option_in_menu != 4))
+        while (!int.TryParse(Console.ReadLine(), out option_in_menu) || option_in_menu < 1 || option_in_menu > 5)
         {
-            Console.WriteLine("Пожалуйста, введите число(1 или 2 или 3 или 4)!");
+            Console.WriteLine("Пожалуйста, введите число от 1 до 4!");
             continue;
         }
 
@@ -33,6 +34,10 @@
                 productService.ShowSelected(username);
                 break;
             case 4:
+                Console.WriteLine("Корзина");
+                productService.ShowOrder(username);
+                break;
+            case 5:
                 var app = new UserService();
                 StartMenu.Show(app);
                 break;
