@@ -1,6 +1,6 @@
-﻿public class MainMenu
+﻿public static class MainMenu
 {
-    public void Show(User username)
+    public static void Show(User username)
     {
         Console.Clear();
         Console.WriteLine($"Пользователь: {username.Name}");
@@ -15,13 +15,14 @@
             Console.WriteLine("Пожалуйста, введите число(1 или 2 или 3 или 4)!");
             continue;
         }
-        var productService = new ProductMenu();
+
+        var productService = new ProductService();
         switch (option_in_menu)
         {
             case 1:
                 Console.Clear();
                 Console.WriteLine("Каталог товаров");
-                productService.ShowCatalog(username);
+                ProductMenu.ShowCatalog(username, productService);
                 break;
             case 2:
                 Console.WriteLine("Давайте добавим товары");

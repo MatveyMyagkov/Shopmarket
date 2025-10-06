@@ -1,6 +1,4 @@
-﻿using System;
-
-public static class StartMenu
+﻿public static class StartMenu
 {
     public static void Show(UserService userService)
     {

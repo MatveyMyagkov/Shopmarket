@@ -1,97 +1,104 @@
-﻿public class ProductMenu: ProductService
+﻿public static class ProductMenu
 {
-    public void ShowCatalog(User user)
+    public static void ShowCatalog(User user, ProductService productService)
     {
-        if (_products.Count == 0)
+        if (productService.Products.Count == 0)
         {
             Console.WriteLine("В каталоге пока нет товаров");
         }
         else
         {
-            foreach (Product currentProduct in _products)
+            foreach (Product currentProduct in productService.Products)
             {
                 Console.WriteLine($"Товар ID({currentProduct.Id}): {currentProduct.Name}");
                 Console.WriteLine($"Краткое описание товара: {currentProduct.ShortDescription}");
-                Console.WriteLine($"Цена: {currentProduct.Price}$\n");
+                Console.WriteLine($"Цена: {currentProduct.Price}$");
             }
 
 
-
-            Console.WriteLine("Что вы хотите сделать с товароми\n0 - Выйти из каталога\n1 - Узнать про них больше информации\n2 - Добавить товар в избранное\n3 - Удалить товар с каталого\n4 - Изменить товар\n");
+            // To do \n
+            Console.WriteLine("Что вы хотите сделать с товароми");
+            Console.WriteLine("0 - Выйти из каталога");
+            Console.WriteLine("1 - Узнать про них больше информации");
+            Console.WriteLine("2 - Добавить товар в избранное");
+            Console.WriteLine("3 - Удалить товар с каталого");
+            Console.WriteLine("4 - Изменить товар");
             int options;
-            while (!int.TryParse(Console.ReadLine(), out options) || (options != 1 && options != 0 && options != 2 && options != 3 && options != 4))
+            while (!int.TryParse(Console.ReadLine(), out options) || options < 0 || options > 4)
             {
-                Console.WriteLine("Пожалуйста, введите число 0, 1, 2, 3 или 4");
+                Console.WriteLine("Пожалуйста, введите число от 0, 1, 2, 3 или 4");
             }
+
             switch (options)
             {
                 case 0:
-                    var backMenu1 = new MainMenu();
-                    backMenu1.Show(user);
+                    MainMenu.Show(user);
                     break;
                 case 1:
                     Console.WriteLine("Какой товар вы бы хотели просмотреть полностью? (Введите ID товара)");
                     int number;
                     while (true)
                     {
-                        if (int.TryParse(Console.ReadLine(), out number) && number > 0 && number <= _products.Count)
+                        if (int.TryParse(Console.ReadLine(), out number) && number > 0 && number <= productService.Products.Count)
                         {
                             break;
                         }
                         Console.WriteLine("Введите Id существующего товара");
 
                     }
-                    ShowFullProduct(user, number);
+
+                    productService.ShowFullProduct(user, number);
                     break;
                 case 2:
                     Console.WriteLine("Какой товар вы бы хотели добавить в избранное? (Введите ID товара)");
                     int _number;
                     while (true)
                     {
-                        if (int.TryParse(Console.ReadLine(), out _number) && _number > 0 && _number <= _products.Count)
+                        if (int.TryParse(Console.ReadLine(), out _number) &&
+                            _number > 0 &&
+                            _number <= productService.Products.Count)
                         {
                             break;
                         }
                         Console.WriteLine("Введите Id существующего товара");
 
                     }
-                    user.Products.Add(_products[_number - 1]);
+                    user.Products.Add(productService.Products.ElementAt(_number - 1));
                     Console.WriteLine("Товар успешно добавлен!");
                     break;
                 case 3:
-                    Console.WriteLine("Какой товар вы бы хотели добавить в избранное? (Введите ID товара)");
+                    Console.WriteLine("Какой товар вы бы хотели удалить из корзины? (Введите ID товара)");
                     int _number2;
                     while (true)
                     {
-                        if (int.TryParse(Console.ReadLine(), out _number2) && _number2 > 0 && _number2 <= _products.Count)
+                        if (int.TryParse(Console.ReadLine(), out _number2) && _number2 > 0 && _number2 <= productService.Products.Count)
                         {
                             break;
                         }
                         Console.WriteLine("Введите Id существующего товара");
 
                     }
-                    DeleteProduct(_products, _number2);
+                    productService.DeleteProduct(_number2);
                     break;
                 case 4:
                     Console.WriteLine("Какой товар вы бы хотели добавить в избранное? (Введите ID товара)");
                     int _number3;
                     while (true)
                     {
-                        if (int.TryParse(Console.ReadLine(), out _number3) && _number3 > 0 && _number3 <= _products.Count)
+                        if (int.TryParse(Console.ReadLine(), out _number3) && _number3 > 0 && _number3 <= productService.Products.Count)
                         {
                             break;
                         }
                         Console.WriteLine("Введите Id существующего товара");
 
                     }
-                    AlterProduct(_products, _number3);
+                    productService.AlterProduct(_number3);
                     break;
 
             }
         }
         Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
         Console.ReadLine();
-        var backMenu = new MainMenu();
-        backMenu.Show(user);
+        MainMenu.Show(user);
     }
 }

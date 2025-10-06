@@ -1,35 +1,37 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-public class ProductService
+﻿public class ProductService
 {
-    public static List<Product> _products = new List<Product>();
-    public static int ID { get; set; } = 1;
+    private static List<Product> _products = new List<Product>();
+
+    public IReadOnlyCollection<Product> Products => _products;
 
     public void AddProduct(User user)
     {
         Console.Clear();
         Console.WriteLine("Введите название товара");
         var nameProduct = Console.ReadLine();
+
         Console.WriteLine("Напишите короткое описание к вашему товару");
         var shortDescription = Console.ReadLine();
+
         Console.WriteLine("Напишите полное описание к вашему товару");
         var description = Console.ReadLine();
+
         Console.WriteLine("Введите цену вашего товара в $");
         decimal price;
         while (!decimal.TryParse(Console.ReadLine(), out price))
         {
             Console.WriteLine("Пожалуйста введите число (Не обязательно целое)");
         }
-        var product = new Product(ID, nameProduct, shortDescription, description, price);
-        ID++;
+
+        var newId = _products.Count + 1;
+        var product = new Product(newId, nameProduct, shortDescription, description, price);
         _products.Add(product);
+
         Console.WriteLine("Товар усспешно добавлен!");
         Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
         Console.ReadLine();
-        var backMenu = new MainMenu();
-        backMenu.Show(user);
-        return;
 
+        MainMenu.Show(user);
     }
 
     public void ShowSelected(User user)
@@ -47,9 +49,11 @@ public class ProductService
                 Console.WriteLine($"Товар ID({product.Id}): {product.Name}");
                 Console.WriteLine($"Краткое описание товара: {product.ShortDescription}");
                 Console.WriteLine($"Полное описание товара: {product.Description}");
-                Console.WriteLine($"Цена: {product.Price}\n");
+                Console.WriteLine($"Цена: {product.Price}");
             }
-            Console.WriteLine("0 - Вернуться на главную\n1 - Удалить товар по ID");
+
+            Console.WriteLine("0 - Вернуться на главную");
+            Console.WriteLine("1 - Удалить товар по ID");
             int options;
             while (!int.TryParse(Console.ReadLine(),out options) || (options != 0 && options != 1))
             {
@@ -58,8 +62,7 @@ public class ProductService
             switch (options)
             {
                 case 0:
-                    var backMenu2 = new MainMenu();
-                    backMenu2.Show(user);
+                    MainMenu.Show(user);
                     break;
                     
                 case 1:
@@ -69,8 +72,8 @@ public class ProductService
         }
         Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
         Console.ReadLine();
-        var backMenu = new MainMenu();
-        backMenu.Show(user);
+
+        MainMenu.Show(user);
     }
 
     public void ShowFullProduct(User user, int number)
@@ -80,12 +83,16 @@ public class ProductService
         Console.WriteLine($"Краткое описание товара: {_products[number - 1].ShortDescription}");
         Console.WriteLine($"Полное описание товара: {_products[number - 1].Description}");
         Console.WriteLine($"Цена: {_products[number - 1].Price}\n");
-        Console.WriteLine("Хотите добавить в избранное этот товар?\n0 - Вернуться на главную\n1 - Добавить в избранное\n");
+
+        Console.WriteLine("Хотите добавить в избранное этот товар?");
+        Console.WriteLine("0 - Вернуться на главную");
+        Console.WriteLine("1 - Добавить в избранное");
         int option;
         while (!int.TryParse(Console.ReadLine(), out option) || (option != 0 && option != 1))
         {
             Console.WriteLine("Введите число 0 или 1!");
         }
+
         switch (option)
         {
             case 0:
@@ -97,8 +104,8 @@ public class ProductService
                 Thread.Sleep(1000);
                 break;
         }
-        var backMenu = new MainMenu();
-        backMenu.Show(user);
+
+        MainMenu.Show(user);
     }
 
     private void DeleteProductCatalog(User user)
@@ -109,6 +116,7 @@ public class ProductService
         {
             Console.WriteLine("Введите ID товара");
         }
+
         var productRemove = user.Products.FirstOrDefault(p => p.Id == options);
         if (productRemove != null)
         {
@@ -120,7 +128,7 @@ public class ProductService
             Console.WriteLine("Товар с указанным ID не найден в корзине");
         }
     }
-    public void DeleteProduct(List<Product> products, int id)
+    public void DeleteProduct(int id)
     {
         var productDelete = _products.FirstOrDefault(p => p.Id == id);
         if (productDelete != null)
@@ -135,7 +143,7 @@ public class ProductService
 
     }
 
-    public void AlterProduct(List<Product> products, int id)
+    public void AlterProduct(int id)
     {
         var productChange = _products.FirstOrDefault(p => p.Id == id);
         if (productChange != null)
@@ -151,16 +159,14 @@ public class ProductService
         {
             Console.WriteLine("Товар с указанным ID не найден в каталоге");
         }
+
         int option;
-        while (!int.TryParse(Console.ReadLine(), out option) || (option != 0 && option != 1 && option != 2 && option != 3 && option != 4))
-        {
-            Console.WriteLine("Введите число 0, 1, 2, 3 или 4!");
-        }
+        int.TryParse(Console.ReadLine(), out option);
+
+        Console.WriteLine("Введите число от 1 до 4!");
+
         switch (option)
         {
-            case 0:
-
-                break;
             case 1:
                 Console.WriteLine("Введите новове название товара: ");
                 var name = Console.ReadLine();
@@ -184,6 +190,10 @@ public class ProductService
                     Console.WriteLine("Пожалуйста введите число (Не обязательно целое)");
                 }
                 productChange.Price = price;
+                break;
+            default:
+                Console.WriteLine("Вы ввели число не из диапазона от (1 до 4)");
+                Console.ReadKey();
                 break;
         }
     }
