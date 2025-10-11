@@ -1,6 +1,6 @@
 ﻿public static class StartMenu
 {
-    public static void Show(UserService userService)
+    public static void Show(UserService userService, ProductService productService, OrderService orderService)
     {
         Console.Clear();
         Console.WriteLine("Добро пожаловать в наш магазин!");
@@ -20,11 +20,11 @@
             case 1:
                 Console.Clear();
                 Console.WriteLine("Давай зарегистрируемся");
-                userService.Register();
+                userService.Register(productService, orderService);
                 break;
             case 2:
                 Console.WriteLine("Давай авторизуемся");
-                userService.Login();
+                userService.Login(productService, orderService);
                 break;
         }
     }

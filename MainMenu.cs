@@ -1,6 +1,6 @@
 ﻿public static class MainMenu
 {
-    public static void Show(User username)
+    public static void Show(User username, ProductService productService, OrderService orderService, UserService userService)
     {
         Console.Clear();
         Console.WriteLine($"Пользователь: {username.Name}");
@@ -16,31 +16,27 @@
             Console.WriteLine("Пожалуйста, введите число от 1 до 4!");
             continue;
         }
-
-        var productService = new ProductService();
         switch (option_in_menu)
         {
             case 1:
                 Console.Clear();
                 Console.WriteLine("Каталог товаров");
-                ProductMenu.ShowCatalog(username, productService);
+                ProductMenu.ShowCatalog(username, productService, orderService, userService);
                 break;
             case 2:
                 Console.WriteLine("Давайте добавим товары");
-                productService.AddProduct(username);
+                productService.AddProduct(username, orderService, userService);
                 break;
             case 3:
                 Console.WriteLine("Избранное");
-                productService.ShowSelected(username);
+                productService.ShowSelected(username, orderService, userService);
                 break;
             case 4:
                 Console.WriteLine("Корзина");
-                var orderService = new OrderService();
-                orderService.ShowOrder(username);
+                orderService.ShowOrder(username, productService, userService);
                 break;
             case 5:
-                var app = new UserService();
-                StartMenu.Show(app);
+                StartMenu.Show(userService, productService, orderService);
                 break;
 
         }

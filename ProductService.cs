@@ -1,13 +1,14 @@
 ﻿public class ProductService
 {
-    private CreateCollections _collections;
+    private readonly List<Product> _products;
 
-    public ProductService()
+    public ProductService(List<Product> products)
     {
-        _collections = CreateCollections.Instance;
+        _products = products;
     }
-    public IReadOnlyCollection<Product> Products => _collections.Products;
-    public void AddProduct(User user)
+
+    public IReadOnlyList<Product> Products => _products.AsReadOnly();
+    public void AddProduct(User user, OrderService orderService, UserService userService)
     {
         Console.Clear();
         Console.WriteLine("Введите название товара");
@@ -26,18 +27,18 @@
             Console.WriteLine("Пожалуйста введите число (Не обязательно целое)");
         }
 
-        var newId = _collections.Products.Count + 1;
+        var newId = _products.Count + 1;
         var product = new Product(newId, nameProduct, shortDescription, description, price);
-        _collections.AddProduct(product);
+        _products.Add(product);
 
         Console.WriteLine("Товар усспешно добавлен!");
         Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
         Console.ReadLine();
 
-        MainMenu.Show(user);
+        MainMenu.Show(user, this, orderService, userService);
     }
 
-    public void ShowSelected(User user)
+    public void ShowSelected(User user, OrderService orderService, UserService userService)
     {
         Console.Clear();
         if (user.Products.Count == 0)
@@ -66,14 +67,13 @@
             switch (options)
             {
                 case 0:
-                    MainMenu.Show(user);
+                    MainMenu.Show(user, this, orderService, userService);
                     break;
 
                 case 1:
                     DeleteProductCatalog(user);
                     break;
                 case 2:
-                    var orderService = new OrderService();
                     orderService.AddOrder(user);
                     break;
             }
@@ -81,16 +81,16 @@
         Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
         Console.ReadLine();
 
-        MainMenu.Show(user);
+        MainMenu.Show(user, this, orderService, userService);
     }
 
-    public void ShowFullProduct(User user, int number)
+    public void ShowFullProduct(User user, int number, OrderService orderService, UserService userService)
     {
         Console.Clear();
-        Console.WriteLine($"Товар ID({number}): {_collections.Products[number - 1].Name}");
-        Console.WriteLine($"Краткое описание товара: {_collections.Products[number - 1].ShortDescription}");
-        Console.WriteLine($"Полное описание товара: {_collections.Products[number - 1].Description}");
-        Console.WriteLine($"Цена: {_collections.Products[number - 1].Price}\n");
+        Console.WriteLine($"Товар ID({number}): {_products[number - 1].Name}");
+        Console.WriteLine($"Краткое описание товара: {_products[number - 1].ShortDescription}");
+        Console.WriteLine($"Полное описание товара: {_products[number - 1].Description}");
+        Console.WriteLine($"Цена: {_products[number - 1].Price}\n");
 
         Console.WriteLine("Хотите добавить в избранное этот товар?");
         Console.WriteLine("0 - Вернуться на главную");
@@ -108,16 +108,16 @@
 
                 break;
             case 1:
-                user.Products.Add(_collections.Products[number - 1]);
+                user.Products.Add(_products[number - 1]);
                 Console.WriteLine("Товар успешно добавлен!");
                 break;
             case 2:
-                user.Order.Add(_collections.Products[number - 1]);
+                user.Order.Add(_products[number - 1]);
                 Console.WriteLine("Товар успешно добавлен!");
                 break;
         }
 
-        MainMenu.Show(user);
+        MainMenu.Show(user, this, orderService, userService);
     }
 
     private void DeleteProductCatalog(User user)
@@ -142,10 +142,10 @@
     }
     public void DeleteProduct(int id)
     {
-        var productDelete = _collections.Products.FirstOrDefault(p => p.Id == id);
+        var productDelete = _products.FirstOrDefault(p => p.Id == id);
         if (productDelete != null)
         {
-            _collections.RemoveProduct(productDelete);
+            _products.Remove(productDelete);
             Console.WriteLine("Товар успешно удален из каталога");
         }
         else
@@ -157,7 +157,7 @@
 
     public void AlterProduct(int id)
     {
-        var productChange = _collections.Products.FirstOrDefault(p => p.Id == id);
+        var productChange = _products.FirstOrDefault(p => p.Id == id);
         if (productChange != null)
         {
             Console.Clear();

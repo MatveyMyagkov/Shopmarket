@@ -1,21 +1,22 @@
 ﻿public class UserService
 {
     private User _currentUser;
-    private CreateCollections _collections;
-    public UserService()
+    private readonly List<User> _users;
+
+    public UserService(List<User> users)
     {
-        _collections = CreateCollections.Instance;
+        _users = users;
     }
 
 
 
-    public void Register()
+    public void Register(ProductService productService, OrderService orderService)
     {
         Console.Write("Введите имя пользователя: ");
         var username = Console.ReadLine();
 
         //if (_users.FirstOrDefault(o => o.Name == username) is not null)
-        if (_collections.Users.Any(o => o.Name == username))
+        if (_users.Any(o => o.Name == username))
         {
             Console.WriteLine("Пользователь с таким именем уже существует!");
             return;
@@ -39,13 +40,13 @@
             Name = username,
             Password = password
         };
-        _collections.Users.Add(_currentUser);
+        _users.Add(_currentUser);
         Console.WriteLine("Регистрация успешна!");
 
-        ShowSuccessMessage(_currentUser);
+        ShowSuccessMessage(_currentUser, productService, orderService);
     }
 
-    public void Login()
+    public void Login(ProductService productService, OrderService orderService)
     {
         Console.Clear();
         Console.WriteLine("Введите имя пользователя: ");
@@ -54,10 +55,10 @@
         Console.WriteLine("Введите пароль: ");
         var password = Console.ReadLine();
 
-        var user = _collections.Users.FirstOrDefault(o => o.Name == loginUser && o.Password == password.Trim());
+        var user = _users.FirstOrDefault(o => o.Name == loginUser && o.Password == password.Trim());
         if (user is not null)
         {
-            MainMenu.Show(user);
+            MainMenu.Show(user, productService, orderService, this);
         }
         else
         {
@@ -75,12 +76,10 @@
             switch (option)
             {
                 case 1:
-                    var backMenu = new UserService();
-                    StartMenu.Show(backMenu);
+                    StartMenu.Show(this, productService, orderService);
                     break;
                 case 2:
-                    var backLogin = new UserService();
-                    backLogin.Login();
+                    Login(productService, orderService);
                     break;
             }
 
@@ -88,9 +87,9 @@
         }
     }
 
-    public void ShowSuccessMessage(User currentUser)
+    public void ShowSuccessMessage(User currentUser, ProductService productService, OrderService orderService)
     {
-        MainMenu.Show(currentUser);
+        MainMenu.Show(currentUser, productService, orderService, this);
     }
 }
 

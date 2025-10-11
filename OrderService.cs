@@ -23,7 +23,7 @@
         }
     }
 
-    public void ShowOrder(User user)
+    public void ShowOrder(User user, ProductService productService, UserService userService)
     {
         Console.Clear();
         if (user.Order.Count == 0)
@@ -51,7 +51,7 @@
             switch (options)
             {
                 case 0:
-                    MainMenu.Show(user);
+                    MainMenu.Show(user, productService, this, userService);
                     break;
 
                 case 1:
@@ -62,7 +62,7 @@
         Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
         Console.ReadLine();
 
-        MainMenu.Show(user);
+        MainMenu.Show(user, productService, this, userService);
     }
     private void DeleteProductOrder(User user)
     {

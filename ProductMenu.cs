@@ -1,6 +1,6 @@
 ﻿public static class ProductMenu
 {
-    public static void ShowCatalog(User user, ProductService productService)
+    public static void ShowCatalog(User user, ProductService productService, OrderService orderService, UserService userService)
     {
         if (productService.Products.Count == 0)
         {
@@ -31,7 +31,7 @@
             switch (options)
             {
                 case 0:
-                    MainMenu.Show(user);
+                    MainMenu.Show(user, productService, orderService, userService);
                     break;
                 case 1:
                     Console.WriteLine("Какой товар вы бы хотели просмотреть полностью? (Введите ID товара)");
@@ -46,7 +46,7 @@
 
                     }
 
-                    productService.ShowFullProduct(user, number);
+                    productService.ShowFullProduct(user, number, orderService, userService);
                     break;
                 case 2:
                     Console.WriteLine("Какой товар вы бы хотели добавить в избранное? (Введите ID товара)");
@@ -115,6 +115,6 @@
 
         Console.WriteLine("Нажмите любую клавишу, чтобы вернуться на главную");
         Console.ReadLine();
-        MainMenu.Show(user);
+        MainMenu.Show(user, productService, orderService, userService);
     }
 }
