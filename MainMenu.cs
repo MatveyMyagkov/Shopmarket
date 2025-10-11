@@ -35,7 +35,8 @@
                 break;
             case 4:
                 Console.WriteLine("Корзина");
-                productService.ShowOrder(username);
+                var orderService = new OrderService();
+                orderService.ShowOrder(username);
                 break;
             case 5:
                 var app = new UserService();
