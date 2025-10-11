@@ -100,7 +100,7 @@
                     int _number3;
                     while (true)
                     {
-                        if (int.TryParse(Console.ReadLine(), out _number3) && _number3 > 0 && _number3 <= productService.Products.Count)
+                        if (int.TryParse(Console.ReadLine(), out _number3) && _number3 > 0 && _number3 <=productService.Products.Count)
                         {
                             break;
                         }

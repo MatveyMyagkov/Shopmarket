@@ -1,11 +1,13 @@
 ﻿public class UserService
 {
     private User _currentUser;
-    private static List<User> _users = new List<User>();
+    private CreateCollections _collections;
     public UserService()
     {
-
+        _collections = CreateCollections.Instance;
     }
+
+
 
     public void Register()
     {
@@ -13,7 +15,7 @@
         var username = Console.ReadLine();
 
         //if (_users.FirstOrDefault(o => o.Name == username) is not null)
-        if (_users.Any(o => o.Name == username))
+        if (_collections.Users.Any(o => o.Name == username))
         {
             Console.WriteLine("Пользователь с таким именем уже существует!");
             return;
@@ -37,7 +39,7 @@
             Name = username,
             Password = password
         };
-        _users.Add(_currentUser);
+        _collections.Users.Add(_currentUser);
         Console.WriteLine("Регистрация успешна!");
 
         ShowSuccessMessage(_currentUser);
@@ -52,7 +54,7 @@
         Console.WriteLine("Введите пароль: ");
         var password = Console.ReadLine();
 
-        var user = _users.FirstOrDefault(o => o.Name == loginUser && o.Password == password.Trim());
+        var user = _collections.Users.FirstOrDefault(o => o.Name == loginUser && o.Password == password.Trim());
         if (user is not null)
         {
             MainMenu.Show(user);
